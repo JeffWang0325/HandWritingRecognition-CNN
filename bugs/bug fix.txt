@@ -1,0 +1,6 @@
+Q:AttributeError_ module 'scipy.misc' has no attribute 'imread'报错问题
+A:pip install scipy==1.1.0
+
+
+Q:keras_applications has no attribute set_keras_submodules
+A: pip install keras -U
