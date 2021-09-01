@@ -88,21 +88,25 @@ def createModel():
     return model
     
 def loadModel():
-    # json_file = open('model.json', 'r')
-    # model_json = json_file.read()
-    # json_file.close()
-    # model = model_from_json(model_json)
-    model = createModel()
-    model.load_weights("mnist_model.h5")
+    # Method 1
+    json_file = open('model.json', 'r')
+    model_json = json_file.read()
+    json_file.close()
+    model = model_from_json(model_json)
+
+    # Method 2
+    # model = createModel()
+    # model.load_weights("mnist_model.h5")
+
     return model
 
-#X_train, y_train, X_test, y_test = getData()
-
-if(not os.path.exists('mnist_model.h5')):
-    model = trainModel(X_train, y_train, X_test, y_test)
-    print('trained model')
-    print(model.summary())
-else:
-    model = loadModel()
-    print('loaded model')
-    print(model.summary())
+if __name__ == '__main__':
+    if(not os.path.exists('mnist_model.h5')):
+        X_train, y_train, X_test, y_test = getData()
+        model = trainModel(X_train, y_train, X_test, y_test)
+        print('trained model')
+        print(model.summary())
+    else:
+        model = loadModel()
+        print('loaded model')
+        print(model.summary())

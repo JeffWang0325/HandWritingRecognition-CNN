@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from tkinter import *
 from PIL import ImageDraw, Image, ImageGrab
 import numpy as np
@@ -11,10 +10,12 @@ import io
 from keras_cnn import trainModel, getData
 from tkinter import filedialog
 
-class Paint(object):
+# class Paint(object):
+class Paint():
 
     def __init__(self):
         self.root = Tk()
+        self.root.title('Handwriting Recognition')
 
         #defining Canvas
         self.c = Canvas(self.root, bg='white', width=280, height=280)
@@ -24,13 +25,16 @@ class Paint(object):
 
         self.c.grid(row=1, columnspan=6)
 
-        self.classify_button = Button(self.root, text='辨識', command=lambda:self.classify(self.c))
+        # self.classify_button = Button(self.root, text='辨識', command=lambda:self.classify(self.c))
+        self.classify_button = Button(self.root, text='Recognize', command=lambda:self.classify(self.c))
         self.classify_button.grid(row=0, column=0, columnspan=2, sticky='EWNS')
 
-        self.clear = Button(self.root, text='清畫面', command=self.clear)
+        # self.clear = Button(self.root, text='清畫面', command=self.clear)
+        self.clear = Button(self.root, text='Clear', command=self.clear)
         self.clear.grid(row=0, column=2, columnspan=2, sticky='EWNS')
 
-        self.savefile = Button(self.root, text='存檔', command=self.savefile)
+        # self.savefile = Button(self.root, text='存檔', command=self.savefile)
+        self.savefile = Button(self.root, text='SaveAs', command=self.savefile)
         self.savefile.grid(row=0, column=4, columnspan=2, sticky='EWNS')
 
         self.prediction_text = Text(self.root, height=2, width=10)
@@ -60,6 +64,12 @@ class Paint(object):
         self.old_x = event.x
         self.old_y = event.y
 
+    def reset(self, event):
+        self.old_x, self.old_y = None, None
+
+    def rgb2gray(rgb):
+        return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+
     def clear(self):
         self.c.delete("all")
         self.image1 = Image.new('RGB', (280, 280), color = 'white')
@@ -67,17 +77,11 @@ class Paint(object):
         self.prediction_text.delete("1.0", END)
 
     def savefile(self):
-        f = filedialog.asksaveasfilename( defaultextension=".png", filetypes = [("png file",".png")])
+        f = filedialog.asksaveasfilename(defaultextension=".png", filetypes = [("png file",".png")])
         if f is None: # asksaveasfile return `None` if dialog closed with "cancel".
             return
         #print(f)
         self.image1.save(f)
-
-    def reset(self, event):
-        self.old_x, self.old_y = None, None
-
-    def rgb2gray(rgb):
-        return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
         
     def classify(self, widget):
         # 顯示設定>100%，會造成辨識不佳，因為抓到的區域會變小
@@ -105,9 +109,10 @@ class Paint(object):
         # img[img==0] = 255
         # img[img==225] = 0
         img[img==255] = 0
-        img[img>100] = 255
+        # img[img>100] = 255
+        img[img>0] = 255
         
-        img2=Image.fromarray(img) 
+        # img2=Image.fromarray(img) 
         #img2.save('2.png')
 
         img = np.reshape(img, (1, 28, 28, 1))
@@ -121,7 +126,7 @@ class Paint(object):
         self.prediction_text.insert(END, pred)
 
     def loadModel(self):
-        if(os.path.exists('mnist_model.h5')):
+        if (os.path.exists('mnist_model.h5')):
             print('loading model')
             json_file = open('model.json', 'r')
             model_json = json_file.read()
