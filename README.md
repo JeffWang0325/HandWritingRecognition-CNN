@@ -34,7 +34,9 @@ Execute paintApp_my_save.py
 </details>
 
 # GUI Demo:
-<img src="https://github.com/JeffWang0325/HandWritingRecognition-CNN/blob/master/GUIDemo.gif"/>
+<p align="center">
+  <img src="https://github.com/JeffWang0325/HandWritingRecognition-CNN/blob/master/GUIDemo.gif"/>
+</p>
 
 ---
 # Contact Information:
